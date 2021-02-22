@@ -26,13 +26,18 @@ class UploadImage(APIView):
 
     def post(self, request, *args, **kwargs):
         form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            pan_file = FileUpload.objects.last()
-            pan_details = extract_pan_details(pan_file.file.path)
-            pan_file.delete()
-        else:
-            pan_details = {}
+        print(form)
+        print(form.is_valid())
+        pan_details = {}
+        try:
+            if form.is_valid():
+                form.save()
+                pan_file = FileUpload.objects.last()
+                pan_details = extract_pan_details(pan_file.file.path)
+                pan_file.delete()
+        except Exception as ex:
+            print(ex)
+
         return Response(pan_details)
 
 
