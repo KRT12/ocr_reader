@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> outside</title>
+</head>
+<body>
+    <h3>Upload Pan Card to See your Details</h3>
+    <form
+    enctype="multipart/form-data"
+    id="id_ajax_upload_form" method="POST"
+    novalidate="">
+    {% csrf_token %}
+      {{ image_form }}
+      <input type="submit" />
+   </form>
+    <br><br>
+    <h3>User Details</h3>
+    <form
+    enctype="multipart/form-data"
+    id="user_form" method="POST"
+    action = "/user/register-user/"
+    novalidate="">
+    {% csrf_token %}
+      {{ user_form }}
+      <input type="submit" />
+   </form>
+   <script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script type="text/javascript">
+    console.log('form upload');
+    $('#id_ajax_upload_form').submit(function(e){
+        console.log('inside submit');
+        e.preventDefault();
+        var data = new FormData($('form').get(0));
+        console.log(data);
+
+        $.ajax({
+            url: '/' + 'user/upload-image/',
+            type: 'POST',
+            data: data,
+            processData: false,
+            contentType: false ,
+            success: function (response) {
+                console.log(response);
+                $("#id_name")[0].value = response['name'];
+                $("#id_fathers_name")[0].value = response['fname'];
+                $("#id_dob")[0].value = response['dob'];
+                $("#id_pan_number")[0].value = response['pan'];
+            }
+    });
+    });
+   </script>
+</body>
+</html>
